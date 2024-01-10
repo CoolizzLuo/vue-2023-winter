@@ -18,11 +18,7 @@ const router = createRouter({
   ],
 });
 
-
-// if to.Name === login and token exists, redirect to home
-// if to.Name !== login and token does not exist, redirect to login
-
-router.beforeEach((to, _, next) => {
+router.beforeEach(async (to, _, next) => {
   const { token } = useUserStore();
 
   if (to.name === 'login' && token) {
@@ -32,7 +28,6 @@ router.beforeEach((to, _, next) => {
   } else {
     next();
   }
-})
-
+});
 
 export default router;

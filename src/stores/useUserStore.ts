@@ -1,36 +1,47 @@
-import { ref, type Ref } from 'vue';
+import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
-import { useMutation, type MutationObserverOptions } from '@tanstack/vue-query';
+import { useMutation } from '@tanstack/vue-query';
 import Cookie from 'js-cookie';
 import api from '@/api';
+import router from '@/router';
 
 const TOKEN_KEY = 'token';
 
-interface UserStore {
-  token: Ref<string | null>;
-  useLoginMutate: any;
-  useLogoutMutate: any;
-}
-
-export const useUserStore = defineStore<string, UserStore>('authStore', () => {
+export const useUserStore = defineStore('authStore', () => {
   const token = ref<string | null>(Cookie.get(TOKEN_KEY) || null);
 
-  const useLoginMutate = () => useMutation({
-    mutationFn: api.login,
-    onSuccess: (res) => {
-      const resToken = res.data.token;
-      Cookie.set(TOKEN_KEY, resToken);
-      token.value = resToken;
-    },
-  });
+  const useLoginMutation = () =>
+    useMutation({
+      mutationFn: api.login,
+      onSuccess: (res) => {
+        const resToken = res.data.token;
+        token.value = resToken;
+      },
+    });
 
-  const useLogoutMutate = () => useMutation({
-    mutationFn: api.logout,
-    onSuccess: () => {
+  const useLogoutMutation = () =>
+    useMutation({
+      mutationFn: api.logout,
+      onSuccess: () => {
+        token.value = null;
+      },
+    });
+
+  const useCheckTokenMutation = () =>
+    useMutation({
+      mutationFn: api.checkToken,
+      onError: () => {
+        token.value = null;
+        router.push('/login');
+      },
+    });
+
+  watch(token, (value) => {
+    if (value) {
+      Cookie.set(TOKEN_KEY, value);
+    } else {
       Cookie.remove(TOKEN_KEY);
-      token.value = null;
-    },
+    }
   });
-
-  return { token, useLoginMutate, useLogoutMutate };
+  return { token, useLoginMutation, useLogoutMutation, useCheckTokenMutation };
 });

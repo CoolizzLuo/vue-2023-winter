@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'vee-validate';
@@ -20,13 +20,11 @@ const { handleSubmit } = useForm({
   validationSchema: formSchema,
 });
 
-const { isPending, mutateAsync } = useUserStore().useLoginMutate();
+const { isPending, isError, error, mutateAsync: loginMutate } = useUserStore().useLoginMutation();
 
 const onSubmit = handleSubmit(async (values) => {
-  console.log('Form submitted!', values);
   const { email, password } = values;
-
-  const res = await mutateAsync({
+  const res = await loginMutate({
     username: email,
     password,
   });
@@ -64,8 +62,15 @@ const onSubmit = handleSubmit(async (values) => {
             </FormItem>
           </FormField>
         </CardContent>
-        <CardFooter class="flex justify-between px-6 pb-6">
-          <Button class="w-full">Login</Button>
+        <CardFooter class="flex flex-col gap-4 justify-between px-6 pb-4">
+          <Button class="w-full" :disabled="isPending">
+            <span
+              v-show="isPending"
+              class="w-6 h-6 rounded-full animate-spin border-2 border-solid border-blue-300 border-t-transparent"
+            />
+            <span v-show="!isPending"> Login </span>
+          </Button>
+          <p v-show="isError" class="text-center text-red-400 font-bold">{{ error }}</p>
         </CardFooter>
       </form>
     </Card>

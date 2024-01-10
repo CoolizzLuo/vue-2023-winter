@@ -15,11 +15,8 @@ const onFulfilled = (response: AxiosResponse) => {
   return response;
 };
 
-const onRejected = (error: AxiosError) => {
-  if (error.response?.data) {
-    return Promise.resolve(error.response.data);
-  }
-  return Promise.reject(error);
+const onRejected = (error: AxiosError<{ message: string }>) => {
+  return Promise.reject(error?.response?.data?.message || error.message);
 };
 
 axiosInstance.interceptors.request.use(onSend);

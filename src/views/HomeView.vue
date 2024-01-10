@@ -1,31 +1,26 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/vue-query';
-import api from '@/api';
 import { useUserStore } from '@/stores/useUserStore';
 import router from '@/router';
+import { onMounted } from 'vue';
 
-const { isPending, isFetching, isLoading, refetch, data, error } = useQuery({
-  queryKey: ['todos'],
-  queryFn: api.test,
-});
-
-const { mutateAsync } = useUserStore().useLogoutMutate();
+const { mutateAsync: checkTokenMutate } = useUserStore().useCheckTokenMutation();
+const { mutateAsync: logoutMutate } = useUserStore().useLogoutMutation();
 
 const logoutHandler = async () => {
-  await mutateAsync();
+  await logoutMutate();
 
   router.push('/login');
 };
+
+onMounted(async () => {
+  await checkTokenMutate();
+});
 </script>
 
 <template>
   <main>
     <h1>{Home}</h1>
-    <div>isFetching: {{ isFetching }}</div>
-    <div>isLoading: {{ isLoading }}</div>
-    <Button @click="() => refetch()">refetch</Button>
-    <div>{{ JSON.stringify(data?.data) }}</div>
     <Button @click="logoutHandler">Log out</Button>
   </main>
 </template>
