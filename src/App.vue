@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 </script>
 
 <template>
@@ -18,4 +19,5 @@ import { RouterView } from 'vue-router';
   <div class="flex justify-center items-center">
     <RouterView />
   </div>
+  <VueQueryDevtools />
 </template>
