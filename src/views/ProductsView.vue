@@ -4,9 +4,10 @@ import { useQuery } from '@tanstack/vue-query';
 import api from '@/api';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 import ProductView from '@/views/ProductView.vue';
 
-const { isFetching, data: products } = useQuery({
+const { isLoading, data: products } = useQuery({
   queryKey: ['products'],
   queryFn: api.getAllProducts,
 });
@@ -38,8 +39,8 @@ const selectHandler = (id: string) => (selectedProductId.value = id);
           <TableHead class="text-right"> 查看細節 </TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
-        <TableRow v-for="product in products" :key="product.id">
+      <TableBody v-if="!isLoading">
+        <TableRow v-for="product in products" :key="product.id" class="h-20">
           <TableCell class="font-medium"> {{ product.category }} </TableCell>
           <TableCell>{{ product.origin_price }}</TableCell>
           <TableCell>{{ product.price }}</TableCell>
@@ -49,6 +50,42 @@ const selectHandler = (id: string) => (selectedProductId.value = id);
           </TableCell>
           <TableCell class="text-right">
             <Button type="button" @click="() => selectHandler(product.id)">查看細節</Button>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+      <TableBody v-else>
+        <TableRow class="h-20">
+          <TableCell class="font-medium">
+            <Skeleton class="w-16 h-6" />
+          </TableCell>
+          <TableCell>
+            <Skeleton class="w-12 h-6" />
+          </TableCell>
+          <TableCell>
+            <Skeleton class="w-12 h-6" />
+          </TableCell>
+          <TableCell>
+            <Skeleton class="w-16 h-6" />
+          </TableCell>
+          <TableCell class="text-right">
+            <Skeleton class="w-20 h-10 inline-block" />
+          </TableCell>
+        </TableRow>
+        <TableRow class="h-20">
+          <TableCell class="font-medium">
+            <Skeleton class="w-16 h-6" />
+          </TableCell>
+          <TableCell>
+            <Skeleton class="w-12 h-6" />
+          </TableCell>
+          <TableCell>
+            <Skeleton class="w-12 h-6" />
+          </TableCell>
+          <TableCell>
+            <Skeleton class="w-16 h-6" />
+          </TableCell>
+          <TableCell class="text-right">
+            <Skeleton class="w-20 h-10 inline-block" />
           </TableCell>
         </TableRow>
       </TableBody>
