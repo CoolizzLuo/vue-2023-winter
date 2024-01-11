@@ -32,12 +32,19 @@ const checkToken = async () => {
 };
 
 const getAllProducts = async () => {
-  return await axiosInstance.get<{
-    success: boolean;
-    products: Product[];
-    pagination: Pagination;
-    messages: string[];
-  }>(`/api/${PATH}/admin/products`);
+  try {
+    const res = await axiosInstance.get<{
+      success: boolean;
+      products: Product[];
+      pagination: Pagination;
+      messages: string[];
+    }>(`/api/${PATH}/admin/products`);
+
+    return res.data.products;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
 export default {
