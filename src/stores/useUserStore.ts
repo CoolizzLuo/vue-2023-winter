@@ -4,11 +4,25 @@ import { useMutation } from '@tanstack/vue-query';
 import Cookie from 'js-cookie';
 import api from '@/api';
 import router from '@/router';
+import { jwtDecode } from 'jwt-decode';
+import { getEmailByJWT } from '@/lib/utils';
 
 const TOKEN_KEY = 'token';
 
+type User = {
+  email?: string;
+};
+
 export const useUserStore = defineStore('authStore', () => {
   const token = ref<string | null>(Cookie.get(TOKEN_KEY) || null);
+  const user = ref<User | null>(
+    token.value
+      ? {
+          email: getEmailByJWT(token.value),
+        }
+      : null
+  );
+
   const setToken = (value: string | null) => {
     if (!value) {
       Cookie.remove(TOKEN_KEY);
@@ -17,6 +31,7 @@ export const useUserStore = defineStore('authStore', () => {
     }
     Cookie.set(TOKEN_KEY, value);
     token.value = value;
+    user.value = jwtDecode(token.value);
   };
 
   const useLoginMutation = () =>
@@ -44,6 +59,5 @@ export const useUserStore = defineStore('authStore', () => {
       },
     });
 
-  // watch(token, (value) => {});
-  return { token, setToken, useLoginMutation, useLogoutMutation, useCheckTokenMutation };
+  return { token, user, setToken, useLoginMutation, useLogoutMutation, useCheckTokenMutation };
 });

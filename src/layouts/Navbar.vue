@@ -4,8 +4,9 @@ import { useUserStore } from '@/stores/useUserStore';
 import router from '@/router';
 import { Button, buttonVariants } from '@/components/ui/button';
 
+const userStore = useUserStore();
 const { mutateAsync: checkTokenMutate } = useUserStore().useCheckTokenMutation();
-const { mutateAsync: logoutMutate } = useUserStore().useLogoutMutation();
+const { isPending, mutateAsync: logoutMutate } = useUserStore().useLogoutMutation();
 
 const logoutHandler = async () => {
   await logoutMutate();
@@ -30,9 +31,10 @@ onMounted(async () => {
         </li>
       </ul>
     </nav>
-    <div class="space-x-2">
+    <div class="flex items-center space-x-2">
+      <span>{{ userStore.user?.email || 'John doe' }}</span>
       <Button variant="outline">Cart</Button>
-      <Button variant="outline" @click="logoutHandler">Log out</Button>
+      <Button variant="outline" class="w-24" :isLoading="isPending" @click="logoutHandler">Log out</Button>
     </div>
   </header>
 </template>

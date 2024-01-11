@@ -54,12 +54,8 @@ const onSubmit = handleSubmit(async (values) => {
           </FormField>
         </CardContent>
         <CardFooter class="flex flex-col gap-4 justify-between px-6 pb-4">
-          <Button class="w-full" :disabled="isPending">
-            <span
-              v-show="isPending"
-              class="w-4 h-4 rounded-full animate-spin border-2 border-solid border-blue-300 border-t-transparent"
-            />
-            <span v-show="!isPending"> Login </span>
+          <Button class="w-full" :disabled="isPending" :isLoading="isPending">
+            <span> Login </span>
           </Button>
           <p v-show="isError" class="text-center text-red-400 font-bold">{{ error }}</p>
         </CardFooter>
