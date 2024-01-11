@@ -1,5 +1,6 @@
 <script setup lang="ts"></script>
-
 <template>
-  <h1>{Home}</h1>
+  <div>Not-Found</div>
 </template>
+
+<style lang="" scoped></style>

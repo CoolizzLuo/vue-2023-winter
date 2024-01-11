@@ -9,21 +9,29 @@ const TOKEN_KEY = 'token';
 
 export const useUserStore = defineStore('authStore', () => {
   const token = ref<string | null>(Cookie.get(TOKEN_KEY) || null);
+  const setToken = (value: string | null) => {
+    if (!value) {
+      Cookie.remove(TOKEN_KEY);
+      token.value = null;
+      return;
+    }
+    Cookie.set(TOKEN_KEY, value);
+    token.value = value;
+  };
 
   const useLoginMutation = () =>
     useMutation({
       mutationFn: api.login,
       onSuccess: (res) => {
-        const resToken = res.data.token;
-        token.value = resToken;
+        setToken(res.data.token);
       },
     });
 
   const useLogoutMutation = () =>
     useMutation({
       mutationFn: api.logout,
-      onSuccess: () => {
-        token.value = null;
+      onSettled: () => {
+        setToken(null);
       },
     });
 
@@ -31,17 +39,11 @@ export const useUserStore = defineStore('authStore', () => {
     useMutation({
       mutationFn: api.checkToken,
       onError: () => {
-        token.value = null;
+        setToken(null);
         router.push('/login');
       },
     });
 
-  watch(token, (value) => {
-    if (value) {
-      Cookie.set(TOKEN_KEY, value);
-    } else {
-      Cookie.remove(TOKEN_KEY);
-    }
-  });
-  return { token, useLoginMutation, useLogoutMutation, useCheckTokenMutation };
+  // watch(token, (value) => {});
+  return { token, setToken, useLoginMutation, useLogoutMutation, useCheckTokenMutation };
 });

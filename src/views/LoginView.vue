@@ -4,23 +4,14 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
-import * as z from 'zod';
 import { useUserStore } from '@/stores/useUserStore';
 import router from '@/router';
+import { formSchema } from '@/lib/validators/loginValidator';
 
-const formSchema = toTypedSchema(
-  z.object({
-    email: z.string().email(),
-    password: z.string().min(6).max(12),
-  })
-);
+const userStore = useUserStore();
+const { isPending, isError, error, mutateAsync: loginMutate } = userStore.useLoginMutation();
 
-const { handleSubmit } = useForm({
-  validationSchema: formSchema,
-});
-
-const { isPending, isError, error, mutateAsync: loginMutate } = useUserStore().useLoginMutation();
+const { handleSubmit } = useForm({ validationSchema: formSchema });
 
 const onSubmit = handleSubmit(async (values) => {
   const { email, password } = values;
@@ -66,7 +57,7 @@ const onSubmit = handleSubmit(async (values) => {
           <Button class="w-full" :disabled="isPending">
             <span
               v-show="isPending"
-              class="w-6 h-6 rounded-full animate-spin border-2 border-solid border-blue-300 border-t-transparent"
+              class="w-4 h-4 rounded-full animate-spin border-2 border-solid border-blue-300 border-t-transparent"
             />
             <span v-show="!isPending"> Login </span>
           </Button>

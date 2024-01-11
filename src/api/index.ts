@@ -1,4 +1,7 @@
 import axiosInstance from './axiosInstance';
+import type { Pagination, Product } from '@/types/products';
+
+const PATH = import.meta.env.VITE_API_PATH;
 
 const test = async () => {
   return await axiosInstance.get('https://jsonplaceholder.typicode.com/todos/1');
@@ -28,8 +31,13 @@ const checkToken = async () => {
   }>('/api/user/check');
 };
 
-const getProducts = async () => {
-  return await axiosInstance.get(`/api/${import.meta.env.VITE_API_PATH}/admin/products`);
+const getAllProducts = async () => {
+  return await axiosInstance.get<{
+    success: boolean;
+    products: Product[];
+    pagination: Pagination;
+    messages: string[];
+  }>(`/api/${PATH}/admin/products`);
 };
 
 export default {
@@ -37,5 +45,5 @@ export default {
   login,
   logout,
   checkToken,
-  getProducts,
+  getAllProducts,
 };
