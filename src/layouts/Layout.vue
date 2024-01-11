@@ -9,5 +9,3 @@ import Navbar from '@/layouts/Navbar.vue';
     <RouterView />
   </MaxWidthWrapper>
 </template>
-
-<style lang="" scoped></style>

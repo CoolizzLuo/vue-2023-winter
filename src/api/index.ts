@@ -1,11 +1,7 @@
 import axiosInstance from './axiosInstance';
-import type { Pagination, Product } from '@/types/products';
+import type { BaseResponse, Pagination, PostProduct, Product } from '@/types/products';
 
 const PATH = import.meta.env.VITE_API_PATH;
-
-const test = async () => {
-  return await axiosInstance.get('https://jsonplaceholder.typicode.com/todos/1');
-};
 
 const login = async (payload: { username: string; password: string }) => {
   return await axiosInstance.post<{
@@ -18,10 +14,7 @@ const login = async (payload: { username: string; password: string }) => {
 };
 
 const logout = async () => {
-  return await axiosInstance.post<{
-    success: boolean;
-    message: string;
-  }>('/logout');
+  return await axiosInstance.post<BaseResponse>('/logout');
 };
 
 const checkToken = async () => {
@@ -31,6 +24,7 @@ const checkToken = async () => {
   }>('/api/user/check');
 };
 
+// Product API
 const getAllProducts = async () => {
   try {
     const res = await axiosInstance.get<{
@@ -47,10 +41,19 @@ const getAllProducts = async () => {
   }
 };
 
+const createProduct = (payload: PostProduct) => axiosInstance.post<BaseResponse>(`/api/${PATH}/admin/product`, payload);
+
+const updateProduct = (payload: PostProduct, id: string) =>
+  axiosInstance.put<BaseResponse>(`/api/${PATH}/admin/product/${id}`, payload);
+
+const deleteProduct = (id: string) => axiosInstance.delete<BaseResponse>(`/api/${PATH}/admin/product/${id}`);
+
 export default {
-  test,
   login,
   logout,
   checkToken,
   getAllProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
 };

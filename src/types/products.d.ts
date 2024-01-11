@@ -1,3 +1,8 @@
+export type BaseResponse = {
+  success: boolean;
+  messages: string;
+};
+
 export type Product = {
   category: string;
   content: string;
@@ -20,3 +25,5 @@ export type Pagination = {
   has_next: boolean;
   category: string;
 };
+
+export type PostProduct = Omit<Product, 'id' | 'num'>;

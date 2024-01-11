@@ -7,7 +7,9 @@ const axiosInstance = axios.create({
 });
 
 const onSend = (config: InternalAxiosRequestConfig) => {
-  config.headers.Authorization = `${useUserStore().token}`;
+  if (useUserStore().token) {
+    config.headers.Authorization = useUserStore().token;
+  }
   return config;
 };
 
