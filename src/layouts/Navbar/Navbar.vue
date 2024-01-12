@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import {
+  ShoppingCart
+} from 'lucide-vue-next'
 import { useUserStore } from '@/stores/useUserStore';
-import router from '@/router';
 import { Button, buttonVariants } from '@/components/ui/button';
+import UserMenu from './UserMenu.vue';
 
 const userStore = useUserStore();
-const { mutateAsync: checkTokenMutate } = useUserStore().useCheckTokenMutation();
-const { isPending, mutateAsync: logoutMutate } = useUserStore().useLogoutMutation();
-
-const logoutHandler = async () => {
-  await logoutMutate();
-
-  router.push('/login');
-};
+const { mutateAsync: checkTokenMutate } = userStore.useCheckTokenMutation();
 
 onMounted(async () => {
   await checkTokenMutate();
@@ -32,9 +28,10 @@ onMounted(async () => {
       </ul>
     </nav>
     <div class="flex items-center space-x-2">
-      <span>{{ userStore.user?.email || 'John doe' }}</span>
-      <Button variant="outline">Cart</Button>
-      <Button variant="outline" class="w-24" :isLoading="isPending" @click="logoutHandler">Log out</Button>
+      <Button variant="ghost" size="sm">
+        <ShoppingCart class="h-4 w-4" />
+      </Button>
+      <UserMenu/>
     </div>
   </header>
 </template>
