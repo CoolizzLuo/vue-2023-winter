@@ -32,23 +32,23 @@ const selectHandler = (id: string) => (selectedProductId.value = id);
       </TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead class="w-[100px]"> 產品名稱 </TableHead>
-          <TableHead>原價</TableHead>
-          <TableHead>售價</TableHead>
+          <TableHead> 產品名稱 </TableHead>
+          <TableHead class="w-[100px]">原價</TableHead>
+          <TableHead class="w-[100px]">售價</TableHead>
           <TableHead>是否啟用</TableHead>
-          <TableHead class="text-right"> 查看細節 </TableHead>
+          <TableHead class="text-right w-[240px]"> 查看細節 </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody v-if="!isLoading">
         <TableRow v-for="product in products" :key="product.id" class="h-20">
           <TableCell class="font-medium"> {{ product.category }} </TableCell>
-          <TableCell>{{ product.origin_price }}</TableCell>
-          <TableCell>{{ product.price }}</TableCell>
+          <TableCell class="w-[100px]">{{ product.origin_price }}</TableCell>
+          <TableCell class="w-[100px]">{{ product.price }}</TableCell>
           <TableCell>
             <span v-if="product.is_enabled === 1" class="text-success">啟用</span>
             <span v-else>未啟用</span>
           </TableCell>
-          <TableCell class="text-right">
+          <TableCell class="text-right w-[240px]">
             <Button type="button" @click="() => selectHandler(product.id)">查看細節</Button>
           </TableCell>
         </TableRow>
