@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import {
-  ShoppingCart
-} from 'lucide-vue-next'
+import { ShoppingCart } from 'lucide-vue-next';
 import { useUserStore } from '@/stores/useUserStore';
 import { Button, buttonVariants } from '@/components/ui/button';
 import UserMenu from './UserMenu.vue';
@@ -20,10 +18,13 @@ onMounted(async () => {
     <nav>
       <ul class="flex gap-4">
         <li>
-          <RouterLink :class="buttonVariants({ variant: 'secondary' })" to="/">Home</RouterLink>
+          <RouterLink :class="buttonVariants({ variant: 'link' })" to="/">Home</RouterLink>
         </li>
         <li>
-          <RouterLink :class="buttonVariants({ variant: 'secondary' })" to="/products">Products</RouterLink>
+          <RouterLink :class="buttonVariants({ variant: 'link' })" to="/products">Products</RouterLink>
+        </li>
+        <li>
+          <RouterLink :class="buttonVariants({ variant: 'link' })" to="/admin">Admin</RouterLink>
         </li>
       </ul>
     </nav>
@@ -31,7 +32,7 @@ onMounted(async () => {
       <Button variant="ghost" size="sm">
         <ShoppingCart class="h-4 w-4" />
       </Button>
-      <UserMenu/>
+      <UserMenu />
     </div>
   </header>
 </template>

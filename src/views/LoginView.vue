@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { useForm } from 'vee-validate';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useForm } from 'vee-validate';
 import { useUserStore } from '@/stores/useUserStore';
 import router from '@/router';
 import { formSchema } from '@/lib/validators/loginValidator';
