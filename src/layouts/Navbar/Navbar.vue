@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { ShoppingCart } from 'lucide-vue-next';
 import { useUserStore } from '@/stores/useUserStore';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import UserMenu from './UserMenu.vue';
+import CartSheet from './CartSheet.vue';
 
 const userStore = useUserStore();
 const { mutateAsync: checkTokenMutate } = userStore.useCheckTokenMutation();
@@ -24,14 +24,12 @@ onMounted(async () => {
           <RouterLink :class="buttonVariants({ variant: 'link' })" to="/products">Products</RouterLink>
         </li>
         <li>
-          <RouterLink :class="buttonVariants({ variant: 'link' })" to="/admin">Admin</RouterLink>
+          <RouterLink :class="buttonVariants({ variant: 'link' })" to="/console">Console</RouterLink>
         </li>
       </ul>
     </nav>
     <div class="flex items-center space-x-2">
-      <Button variant="ghost" size="sm">
-        <ShoppingCart class="h-4 w-4" />
-      </Button>
+      <CartSheet />
       <UserMenu />
     </div>
   </header>

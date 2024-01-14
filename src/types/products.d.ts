@@ -4,6 +4,7 @@ export type BaseResponse = {
 };
 
 export type Product = {
+  title: string;
   category: string;
   content: string;
   description: string;
@@ -13,9 +14,21 @@ export type Product = {
   is_enabled: number;
   origin_price: number;
   price: number;
-  title: string;
   unit: string;
   num: number;
+};
+
+export type PostProduct = {
+  title: string;
+  category: string;
+  origin_price: number;
+  price: number;
+  unit: string;
+  imageUrl?: string;
+  imagesUrl?: string[];
+  content?: string;
+  description?: string;
+  is_enabled?: number;
 };
 
 export type Pagination = {
@@ -25,5 +38,3 @@ export type Pagination = {
   has_next: boolean;
   category: string;
 };
-
-export type PostProduct = Omit<Product, 'id' | 'num'>;

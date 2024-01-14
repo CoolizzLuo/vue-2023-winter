@@ -1,5 +1,6 @@
+import type { PostProduct } from '@/lib/validators/productValidator';
+import type { BaseResponse, Pagination, Product } from '@/types/products';
 import axiosInstance from './axiosInstance';
-import type { BaseResponse, Pagination, PostProduct, Product } from '@/types/products';
 
 const PATH = import.meta.env.VITE_API_PATH;
 
@@ -41,10 +42,18 @@ const getAllProducts = async () => {
   }
 };
 
-const createProduct = (payload: PostProduct) => axiosInstance.post<BaseResponse>(`/api/${PATH}/admin/product`, payload);
+const createProduct = (payload: PostProduct) =>
+  axiosInstance.post<BaseResponse>(`/api/${PATH}/admin/product`, {
+    data: {
+      ...payload,
+      is_enabled: payload.is_enabled ? 1 : 0,
+    },
+  });
 
 const updateProduct = (payload: PostProduct, id: string) =>
-  axiosInstance.put<BaseResponse>(`/api/${PATH}/admin/product/${id}`, payload);
+  axiosInstance.put<BaseResponse>(`/api/${PATH}/admin/product/${id}`, {
+    data: payload,
+  });
 
 const deleteProduct = (id: string) => axiosInstance.delete<BaseResponse>(`/api/${PATH}/admin/product/${id}`);
 

@@ -22,6 +22,11 @@ const router = createRouter({
           component: () => import('@/views/ProductsView.vue'),
         },
         {
+          path: 'console',
+          name: 'console',
+          component: () => import('@/views/ConsoleView.vue'),
+        },
+        {
           path: '/:notFound',
           name: 'not-found',
           component: NotFoundView,
