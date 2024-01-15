@@ -52,7 +52,10 @@ const createProduct = (payload: PostProduct) =>
 
 const updateProduct = (payload: PostProduct, id: string) =>
   axiosInstance.put<BaseResponse>(`/api/${PATH}/admin/product/${id}`, {
-    data: payload,
+    data: {
+      ...payload,
+      is_enabled: payload.is_enabled ? 1 : 0,
+    },
   });
 
 const deleteProduct = (id: string) => axiosInstance.delete<BaseResponse>(`/api/${PATH}/admin/product/${id}`);

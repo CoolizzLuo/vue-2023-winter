@@ -3,10 +3,12 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading?: boolean;
 }>();
 
 const table = useVueTable({
@@ -35,7 +37,14 @@ const table = useVueTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        <template v-if="table.getRowModel().rows?.length">
+        <template v-if="isLoading">
+          <TableRow v-for="i in columns.length" :key="i">
+            <TableCell :colSpan="columns.length">
+              <Skeleton class="h-10 rounded-lg" />
+            </TableCell>
+          </TableRow>
+        </template>
+        <template v-else-if="table.getRowModel().rows?.length">
           <TableRow
             v-for="row in table.getRowModel().rows"
             :key="row.id"

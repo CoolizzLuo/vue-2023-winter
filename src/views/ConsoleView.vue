@@ -1,20 +1,26 @@
 <script setup lang="ts">
-import { computed, h, ref } from 'vue';
-import { useQuery } from '@tanstack/vue-query';
+import { h } from 'vue';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import type { ColumnDef } from '@tanstack/vue-table';
 import ProductFormDialog from '@/components/ProductFormDialog.vue';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { DataTable } from '@/components/ui/table';
 import api from '@/api';
 import type { Product } from '@/types/products';
 
-const { isLoading, data } = useQuery({
+const queryClient = useQueryClient();
+const { isFetching, data } = useQuery({
   queryKey: ['products'],
   queryFn: api.getAllProducts,
   initialData: [],
 });
-const editingId = ref<string | null>(null);
-const editingProduct = computed(() => data.value.find((product) => product.id === editingId.value));
+const { isPending, mutateAsync: deleteMutate } = useMutation({
+  mutationFn: api.deleteProduct,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+  },
+});
 
 const columns: ColumnDef<Product>[] = [
   {
@@ -36,21 +42,28 @@ const columns: ColumnDef<Product>[] = [
   {
     accessorKey: 'is_enabled',
     header: '是否啟用',
+    cell: ({ row }) => h(Switch, { disabled: true, checked: !!row.getValue('is_enabled') }),
   },
   {
     accessorKey: 'id',
     header: '操作',
-    // cell: ({ row }) => h(Button, { variant: 'secondary' }, () => row.getValue('title')),
-    // cell: ({ row }) => h('div', { class: 'lowercase' }, row.getValue('title')),
+
     cell: ({ row }) =>
-      h('div', {}, [
-        h(Button, { size: 'sm', onClick: () => (editingId.value = row.getValue('id')) }, () => '編輯'),
+      h('div', { class: 'space-x-2' }, [
+        h(
+          ProductFormDialog,
+          {
+            product: data.value.find((product) => product.id === row.getValue('id')),
+          },
+          () => h(Button, { variant: 'secondary', size: 'sm' }, () => '編輯')
+        ),
         h(
           Button,
           {
-            variant: 'secondary',
+            variant: 'destructive',
             size: 'sm',
-            onClick: () => console.log(row.original),
+            isLoading: isPending.value,
+            onClick: () => deleteMutate(row.getValue('id')),
           },
           () => '刪除'
         ),
@@ -63,15 +76,10 @@ const columns: ColumnDef<Product>[] = [
   <div>Console</div>
   <div class="flex justify-end">
     <ProductFormDialog>
-      <Button type="button"> Create Product </Button>
-    </ProductFormDialog>
-    <ProductFormDialog :product="editingProduct">
-      <Button type="button"> Edit Product </Button>
+      <Button type="button">Create Product</Button>
     </ProductFormDialog>
   </div>
   <div class="py-6">
-    <DataTable :columns="columns" :data="data" />
+    <DataTable :columns="columns" :data="data" :isLoading="isFetching" />
   </div>
-  {{ editingId }}
-  {{ editingProduct }}
 </template>
