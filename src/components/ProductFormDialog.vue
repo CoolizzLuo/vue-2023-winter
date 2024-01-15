@@ -48,7 +48,7 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <Dialog v-model:open="isModalOpen">
     <DialogTrigger as-child>
-      <Button type="button" variant="outline"> Create Product </Button>
+      <slot />
     </DialogTrigger>
     <DialogContent>
       <form @submit="onSubmit">
