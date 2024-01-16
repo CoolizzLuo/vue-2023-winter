@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import ImageUrlsInput from '@/components/ImageUrlsInput.vue';
+import ImagesUrlInput from '@/components/ImagesUrlInput.vue';
 import { productSchema, type PostProduct } from '@/lib/validators/productValidator';
 import api from '@/api';
 import type { Product } from '@/types/products';
@@ -180,7 +180,7 @@ watch(isModalOpen, () => {
           </div>
           <details open>
             <summary>新增多圖</summary>
-            <ImageUrlsInput :imageUrls="values.imagesUrl" :setImageUrls="setImagesUrl" />
+            <ImagesUrlInput :imageUrls="values.imagesUrl" :setImageUrls="setImagesUrl" />
           </details>
         </ScrollArea>
         <DialogFooter class="flex flex-col gap-4 justify-between py-4">
