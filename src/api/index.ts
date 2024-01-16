@@ -37,7 +37,7 @@ const getAllProducts = async () => {
 
     return res.data.products;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };

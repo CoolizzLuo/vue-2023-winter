@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import {
-  Cloud,
-  Github,
-  LifeBuoy,
-  LogOut,
-  User,
-} from 'lucide-vue-next'
+import { LogOut, User } from 'lucide-vue-next';
 
 import router from '@/router';
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/dropdown-menu';
 import { useUserStore } from '@/stores/useUserStore';
 
 const userStore = useUserStore();
@@ -28,8 +22,6 @@ const logoutHandler = async () => {
 
   router.push('/login');
 };
-
-
 </script>
 
 <template>
@@ -40,20 +32,7 @@ const logoutHandler = async () => {
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56">
-      <DropdownMenuLabel>{{ userStore.user?.email || 'John doe' }}</DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem>
-        <Github class="mr-2 h-4 w-4" />
-        <span>GitHub</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem>
-        <LifeBuoy class="mr-2 h-4 w-4" />
-        <span>Support</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem disabled>
-        <Cloud class="mr-2 h-4 w-4" />
-        <span>API</span>
-      </DropdownMenuItem>
+      <DropdownMenuLabel>{{ userStore.user?.email }}</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuItem class="cursor-pointer" @click="logoutHandler">
         <LogOut class="mr-2 h-4 w-4" />

@@ -25,6 +25,7 @@ const table = useVueTable({
 <template>
   <div class="border rounded-md">
     <Table>
+      <slot name="caption" />
       <TableHeader>
         <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
           <TableHead v-for="header in headerGroup.headers" :key="header.id">

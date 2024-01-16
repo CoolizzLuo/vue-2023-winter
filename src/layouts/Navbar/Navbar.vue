@@ -35,4 +35,9 @@ onMounted(async () => {
   </header>
 </template>
 
-<style lang="" scoped></style>
+<style scoped>
+.router-link-exact-active {
+  @apply underline;
+  @apply font-bold;
+}
+</style>

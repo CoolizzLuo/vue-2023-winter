@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import { h } from 'vue';
+import { computed, h } from 'vue';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import type { ColumnDef } from '@tanstack/vue-table';
 import ProductFormDialog from '@/components/ProductFormDialog.vue';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { DataTable } from '@/components/ui/table';
+import { DataTable, TableCaption } from '@/components/ui/table';
 import api from '@/api';
 import type { Product } from '@/types/products';
 
 const queryClient = useQueryClient();
-const { isFetching, data } = useQuery({
+const { isLoading, data } = useQuery({
   queryKey: ['products'],
   queryFn: api.getAllProducts,
-  initialData: [],
+  // initialData: [],
 });
-const { isPending, mutateAsync: deleteMutate } = useMutation({
+
+const products = computed(() => data.value ?? []);
+
+const { mutateAsync: deleteMutate } = useMutation({
   mutationFn: api.deleteProduct,
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -53,7 +56,7 @@ const columns: ColumnDef<Product>[] = [
         h(
           ProductFormDialog,
           {
-            product: data.value.find((product) => product.id === row.getValue('id')),
+            product: products.value.find((product) => product.id === row.getValue('id')),
           },
           () => h(Button, { variant: 'secondary', size: 'sm' }, () => '編輯')
         ),
@@ -62,7 +65,7 @@ const columns: ColumnDef<Product>[] = [
           {
             variant: 'destructive',
             size: 'sm',
-            isLoading: isPending.value,
+            // isLoading: isPending.value,
             onClick: () => deleteMutate(row.getValue('id')),
           },
           () => '刪除'
@@ -80,6 +83,12 @@ const columns: ColumnDef<Product>[] = [
     </ProductFormDialog>
   </div>
   <div class="py-6">
-    <DataTable :columns="columns" :data="data" :isLoading="isFetching" />
+    <DataTable :columns="columns" :data="products" :isLoading="isLoading">
+      <template #caption>
+        <TableCaption v-show="products?.length">
+          目前有 <span>{{ products?.length }}</span> 項產品
+        </TableCaption>
+      </template>
+    </DataTable>
   </div>
 </template>
