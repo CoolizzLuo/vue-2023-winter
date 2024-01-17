@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
-import api from '@/api';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import ProductView from '@/views/ProductView.vue';
+import api from '@/api';
+import QUERY_KEY from '@/constant/queryKey';
 
 const { isLoading, data: products } = useQuery({
-  queryKey: ['products'],
+  queryKey: [QUERY_KEY.PRODUCTS],
   queryFn: api.getAllProducts,
 });
 

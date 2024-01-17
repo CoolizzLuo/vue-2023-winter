@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toValue, watch } from 'vue';
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
+import { ref, watch, type PropType } from 'vue';
 import { useForm } from 'vee-validate';
 
 import { Button } from '@/components/ui/button';
@@ -18,35 +17,21 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ImagesUrlInput from '@/components/ImagesUrlInput.vue';
-import { productSchema, type PostProduct } from '@/lib/validators/productValidator';
-import api from '@/api';
+import useProductMutation from '@/composables/useProductMutation';
+import { productSchema } from '@/lib/validators/productValidator';
 import type { Product } from '@/types/products';
 
-const props = defineProps<{ product?: Product }>();
-
-const isModalOpen = ref(false);
-const isCreateAction = computed(() => !props.product);
-
-const queryClient = useQueryClient();
-const {
-  isPending,
-  isError,
-  error,
-  mutateAsync: createProductMutate,
-} = useMutation({
-  mutationFn: (payload: PostProduct) => {
-    if (isCreateAction.value) {
-      return api.createProduct(payload);
-    } else {
-      return api.updateProduct(payload, props.product?.id || '');
-    }
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['products'] });
+const props = defineProps({
+  product: {
+    type: Object as PropType<Product>,
+    default: null,
   },
 });
 
-const { handleSubmit, values, setValues, setFieldValue } = useForm({
+const isModalOpen = ref(false);
+
+const { isPending, isError, error, mutateAsync: createProductMutate } = useProductMutation(props.product?.id);
+const { handleSubmit, values, setValues, setFieldValue, resetForm } = useForm({
   validationSchema: productSchema,
 });
 
@@ -56,12 +41,11 @@ const onSubmit = handleSubmit(async (values) => {
 });
 
 const setImagesUrl = (imagesUrl: string[]) => {
-  console.log('imagesUrl 1', imagesUrl);
-  console.log('imagesUrl 2', toValue(imagesUrl));
-  setFieldValue('imagesUrl', toValue(imagesUrl));
+  setFieldValue('imagesUrl', imagesUrl);
 };
 
 watch(isModalOpen, () => {
+  resetForm();
   if (isModalOpen.value && props.product) {
     setValues({
       ...props.product,
@@ -82,7 +66,7 @@ watch(isModalOpen, () => {
           <DialogTitle>Create Product</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <ScrollArea class="px-2 h-full max-h-[calc(100vh-200px)]">
+        <ScrollArea class="px-3 h-full max-h-[calc(100vh-200px)]">
           <div class="flex pt-2">
             <div class="flex flex-col flex-1 gap-4 px-2">
               <FormField v-slot="{ componentField }" name="title">
@@ -184,16 +168,15 @@ watch(isModalOpen, () => {
           </div>
           <details open class="py-4">
             <summary class="cursor-pointer">新增多圖</summary>
-            <ImagesUrlInput :imageUrls="values.imagesUrl" @update:imageUrls="setImagesUrl" />
-            <!-- <ImagesUrlInput :imageUrls="values.imagesUrl" :setImagesUrl="setImagesUrl" /> -->
+            <ImagesUrlInput :imagesUrl="values.imagesUrl" @update:imagesUrl="setImagesUrl" />
           </details>
+          <DialogFooter class="flex flex-col gap-4 justify-between py-4">
+            <Button type="submit" class="w-full" :disabled="isPending" :isLoading="isPending">
+              {{ product ? '更新' : '新增' }}
+            </Button>
+            <p v-show="isError" class="text-center text-red-400 font-bold">{{ error }}</p>
+          </DialogFooter>
         </ScrollArea>
-        <DialogFooter class="flex flex-col gap-4 justify-between py-4">
-          <Button type="submit" class="w-full" :disabled="isPending" :isLoading="isPending">
-            {{ isCreateAction ? '新增' : '更新' }}
-          </Button>
-          <p v-show="isError" class="text-center text-red-400 font-bold">{{ error }}</p>
-        </DialogFooter>
       </form>
     </DialogContent>
   </Dialog>

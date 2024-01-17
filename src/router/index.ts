@@ -24,7 +24,7 @@ const router = createRouter({
         {
           path: 'console',
           name: 'console',
-          component: () => import('@/views/ConsoleView.vue'),
+          component: () => import('@/views/ConsoleView'),
         },
         {
           path: '/:notFound',

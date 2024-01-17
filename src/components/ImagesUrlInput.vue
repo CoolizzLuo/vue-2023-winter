@@ -1,34 +1,37 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { ref, watch, type PropType } from 'vue';
 import { PlusIcon } from 'lucide-vue-next';
 
-const props = defineProps<{ imageUrls?: string[]; setImagesUrl?: (value: string[]) => void }>();
-const emits = defineEmits(['update:imageUrls']);
-const imageUrls = ref(props?.imageUrls ? [...props.imageUrls] : []);
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
-watch(imageUrls.value, (newUrls) => {
-  emits('update:imageUrls', newUrls);
+const props = defineProps({
+  imagesUrl: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
 });
+const emits = defineEmits(['update:imagesUrl']);
 
-const removeImageUrl = (index: number) => {
-  imageUrls.value.splice(index, 1);
-};
+const imagesUrlModel = ref([...props.imagesUrl]);
 
-const addImageUrl = () => {
-  imageUrls.value.push('');
-};
+const addImageUrl = () => imagesUrlModel.value.push('');
+const removeImageUrl = (index: number) => imagesUrlModel.value.splice(index, 1);
+
+watch(imagesUrlModel.value, (newUrls) => {
+  emits('update:imagesUrl', newUrls);
+});
 </script>
 
 <template>
-  <div ref="containerRef" class="flex flex-col gap-8">
-    <div class="space-y-4" v-for="(imageUrl, index) in imageUrls" :key="index">
-      <div class="min-w-[335px] h-[250px]">
+  <div ref="containerRef" class="flex flex-col gap-4 pt-4">
+    <div class="space-y-2" v-for="(imageUrl, index) in imagesUrlModel" :key="index">
+      <span>圖 {{ index + 1 }}</span>
+      <div v-if="imageUrl" class="min-w-[335px] h-[250px]">
         <img class="rounded-md max-w-[335px] max-h-[250px] object-cover py-4" :src="imageUrl" alt="product-img" />
       </div>
       <div class="flex gap-2 px-2">
-        <Input type="text" v-model.lazy="imageUrls[index]" placeholder="請輸入商品圖片網址" />
+        <Input type="text" v-model.lazy="imagesUrlModel[index]" placeholder="請輸入商品圖片網址" />
         <Button type="button" class="w-14" variant="destructive" size="sm" @click="removeImageUrl(index)">
           刪除
         </Button>

@@ -2,16 +2,17 @@
 import { computed, h } from 'vue';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import type { ColumnDef } from '@tanstack/vue-table';
-import ProductFormDialog from '@/components/ProductFormDialog.vue';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { DataTable, TableCaption } from '@/components/ui/table';
+import ProductFormDialog from './ProductFormDialog.vue';
 import api from '@/api';
 import type { Product } from '@/types/products';
+import QUERY_KEY from '@/constant/queryKey';
 
 const queryClient = useQueryClient();
 const { isLoading, data } = useQuery({
-  queryKey: ['products'],
+  queryKey: [QUERY_KEY.PRODUCTS],
   queryFn: api.getAllProducts,
   // initialData: [],
 });
@@ -21,7 +22,7 @@ const products = computed(() => data.value ?? []);
 const { mutateAsync: deleteMutate } = useMutation({
   mutationFn: api.deleteProduct,
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['products'] });
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEY.PRODUCTS] });
   },
 });
 
@@ -75,7 +76,6 @@ const columns: ColumnDef<Product>[] = [
 </script>
 
 <template>
-  <div>Console</div>
   <div class="flex justify-end">
     <ProductFormDialog>
       <Button type="button">Create Product</Button>
