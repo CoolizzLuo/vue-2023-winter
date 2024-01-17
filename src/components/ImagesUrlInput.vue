@@ -28,7 +28,11 @@ watch(imagesUrlModel.value, (newUrls) => {
     <div class="space-y-2" v-for="(imageUrl, index) in imagesUrlModel" :key="index">
       <span>圖 {{ index + 1 }}</span>
       <div v-if="imageUrl" class="min-w-[335px] h-[250px]">
-        <img class="rounded-md max-w-[335px] max-h-[250px] object-cover py-4" :src="imageUrl" alt="product-img" />
+        <img
+          class="rounded-md max-w-[335px] max-h-[250px] object-cover py-4"
+          :src="imageUrl"
+          :alt="'product-img-' + index"
+        />
       </div>
       <div class="flex gap-2 px-2">
         <Input type="text" v-model.lazy="imagesUrlModel[index]" placeholder="請輸入商品圖片網址" />
