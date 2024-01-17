@@ -50,7 +50,6 @@ const columns: ColumnDef<Product>[] = [
   {
     accessorKey: 'id',
     header: '操作',
-
     cell: ({ row }) =>
       h('div', { class: 'space-x-2' }, [
         h(

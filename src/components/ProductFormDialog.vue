@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, toValue, watch } from 'vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { useForm } from 'vee-validate';
 
@@ -55,7 +55,11 @@ const onSubmit = handleSubmit(async (values) => {
   isModalOpen.value = false;
 });
 
-const setImagesUrl = (imagesUrl: string[]) => setFieldValue('imagesUrl', imagesUrl);
+const setImagesUrl = (imagesUrl: string[]) => {
+  console.log('imagesUrl 1', imagesUrl);
+  console.log('imagesUrl 2', toValue(imagesUrl));
+  setFieldValue('imagesUrl', toValue(imagesUrl));
+};
 
 watch(isModalOpen, () => {
   if (isModalOpen.value && props.product) {
@@ -178,9 +182,10 @@ watch(isModalOpen, () => {
               </FormField>
             </div>
           </div>
-          <details open>
-            <summary>新增多圖</summary>
-            <ImagesUrlInput :imageUrls="values.imagesUrl" :setImageUrls="setImagesUrl" />
+          <details open class="py-4">
+            <summary class="cursor-pointer">新增多圖</summary>
+            <ImagesUrlInput :imageUrls="values.imagesUrl" @update:imageUrls="setImagesUrl" />
+            <!-- <ImagesUrlInput :imageUrls="values.imagesUrl" :setImagesUrl="setImagesUrl" /> -->
           </details>
         </ScrollArea>
         <DialogFooter class="flex flex-col gap-4 justify-between py-4">
