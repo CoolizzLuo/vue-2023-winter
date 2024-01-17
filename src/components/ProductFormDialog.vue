@@ -82,7 +82,7 @@ watch(isModalOpen, () => {
           <DialogTitle>Create Product</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <ScrollArea class="px-2 max-h-[calc(100vh-200px)]">
+        <ScrollArea class="px-2 h-full max-h-[calc(100vh-200px)]">
           <div class="flex pt-2">
             <div class="flex flex-col flex-1 gap-4 px-2">
               <FormField v-slot="{ componentField }" name="title">
