@@ -5,6 +5,7 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { DataTable, TableCaption } from '@/components/ui/table';
+import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import ProductFormDialog from './ProductFormDialog.vue';
 import api from '@/api';
 import type { Product } from '@/types/products';
@@ -61,14 +62,13 @@ const columns: ColumnDef<Product>[] = [
           () => h(Button, { variant: 'secondary', size: 'sm' }, () => '編輯')
         ),
         h(
-          Button,
+          ConfirmDialog,
           {
-            variant: 'destructive',
-            size: 'sm',
-            // isLoading: isPending.value,
-            onClick: () => deleteMutate(row.getValue('id')),
+            handleConfirm: () => deleteMutate(row.getValue('id')),
+            title: '刪除產品',
+            description: '確定要刪除此產品嗎？',
           },
-          () => '刪除'
+          () => h(Button, { variant: 'destructive', size: 'sm' }, () => '刪除')
         ),
       ]),
   },

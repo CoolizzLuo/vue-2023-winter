@@ -13,7 +13,7 @@ type User = {
   email?: string;
 };
 
-export const useUserStore = defineStore('authStore', () => {
+export const useUserStore = defineStore('userStore', () => {
   const token = ref<string | null>(Cookie.get(TOKEN_KEY) || null);
   const user = ref<User | null>(
     token.value
