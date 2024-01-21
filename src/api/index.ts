@@ -60,6 +60,21 @@ const updateProduct = (payload: PostProduct, id: string) =>
 
 const deleteProduct = (id: string) => axiosInstance.delete<BaseResponse>(`/api/${PATH}/admin/product/${id}`);
 
+const uploadImage = (file: File) => {
+  const formData = new FormData();
+  formData.append('file-to-upload', file);
+
+  return axiosInstance.post<{
+    success: boolean;
+    imageUrl?: string;
+    message?: string;
+  }>(`/api/${PATH}/admin/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 export default {
   login,
   logout,
@@ -68,4 +83,5 @@ export default {
   createProduct,
   updateProduct,
   deleteProduct,
+  uploadImage,
 };

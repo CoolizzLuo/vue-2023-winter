@@ -167,7 +167,7 @@ watch(isModalOpen, () => {
             </div>
           </div>
           <details open class="py-4">
-            <summary class="cursor-pointer">新增多圖</summary>
+            <summary class="cursor-pointer select-none">新增多圖</summary>
             <ImagesUrlInput :imagesUrl="values.imagesUrl" @update:imagesUrl="setImagesUrl" />
           </details>
           <DialogFooter class="flex flex-col gap-4 justify-between py-4">

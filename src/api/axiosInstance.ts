@@ -1,5 +1,6 @@
 import { useUserStore } from '@/stores/useUserStore';
 import axios, { AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
+import { useToast } from '@/components/ui/toast/useToast';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -18,7 +19,13 @@ const onFulfilled = (response: AxiosResponse) => {
 };
 
 const onRejected = (error: AxiosError<{ message: string }>) => {
-  return Promise.reject(error?.response?.data?.message || error.message);
+  // return Promise.reject(error?.response?.data?.message || error.message);
+  useToast().toast({
+    title: 'Something went wrong',
+    variant: 'destructive',
+    duration: 2000,
+    description: error?.response?.data?.message ?? error.message,
+  });
 };
 
 axiosInstance.interceptors.request.use(onSend);
