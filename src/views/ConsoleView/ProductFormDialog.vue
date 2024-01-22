@@ -16,8 +16,8 @@ import {
 } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import ImagesUrlInput from '@/components/ImagesUrlInput.vue';
 import useProductMutation from '@/composables/useProductMutation';
+import MultiImageForm from './MultiImageForm.vue';
 import { productSchema } from '@/lib/validators/productValidator';
 import type { Product } from '@/types/products';
 
@@ -168,7 +168,7 @@ watch(isModalOpen, () => {
           </div>
           <details open class="py-4">
             <summary class="cursor-pointer select-none">新增多圖</summary>
-            <ImagesUrlInput :imagesUrl="values.imagesUrl" @update:imagesUrl="setImagesUrl" />
+            <MultiImageForm :imagesUrl="values.imagesUrl" @update:imagesUrl="setImagesUrl" />
           </details>
           <DialogFooter class="flex flex-col gap-4 justify-between py-4">
             <Button type="submit" class="w-full" :disabled="isPending" :isLoading="isPending">
