@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useMutation } from '@tanstack/vue-query';
 import Cookie from 'js-cookie';
@@ -36,7 +36,7 @@ export const useUserStore = defineStore('userStore', () => {
 
   const useLoginMutation = () =>
     useMutation({
-      mutationFn: api.login,
+      mutationFn: api.auth.login,
       onSuccess: (res) => {
         setToken(res.data.token);
       },
@@ -44,7 +44,7 @@ export const useUserStore = defineStore('userStore', () => {
 
   const useLogoutMutation = () =>
     useMutation({
-      mutationFn: api.logout,
+      mutationFn: api.auth.logout,
       onSettled: () => {
         setToken(null);
       },
@@ -52,7 +52,7 @@ export const useUserStore = defineStore('userStore', () => {
 
   const useCheckTokenMutation = () =>
     useMutation({
-      mutationFn: api.checkToken,
+      mutationFn: api.auth.checkToken,
       onError: () => {
         setToken(null);
         router.push('/login');

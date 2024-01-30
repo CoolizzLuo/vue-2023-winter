@@ -22,9 +22,9 @@ const router = createRouter({
           component: () => import('@/views/ProductsView.vue'),
         },
         {
-          path: 'console',
-          name: 'console',
-          component: () => import('@/views/ConsoleView'),
+          path: 'admin',
+          name: 'admin',
+          component: () => import('@/views/AdminView'),
         },
         {
           path: '/:notFound',

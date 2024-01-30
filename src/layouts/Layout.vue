@@ -6,6 +6,8 @@ import Navbar from '@/layouts/Navbar';
 <template>
   <MaxWidthWrapper>
     <Navbar />
-    <RouterView />
+    <div class="py-4">
+      <RouterView />
+    </div>
   </MaxWidthWrapper>
 </template>

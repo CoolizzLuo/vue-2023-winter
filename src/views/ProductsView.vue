@@ -10,7 +10,7 @@ import QUERY_KEY from '@/constant/queryKey';
 
 const { isLoading, data: products } = useQuery({
   queryKey: [QUERY_KEY.PRODUCTS],
-  queryFn: api.getAllProducts,
+  queryFn: api.admin.getAllProducts,
 });
 
 const selectedProductId = ref<string | null>(null);

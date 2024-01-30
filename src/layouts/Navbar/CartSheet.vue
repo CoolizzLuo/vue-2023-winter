@@ -19,7 +19,7 @@ import {
   <Sheet>
     <SheetTrigger as-child>
       <Button variant="ghost" size="sm">
-        <ShoppingCart class="h-4 w-4" />
+        <ShoppingCart class="h-5 w-5" />
       </Button>
     </SheetTrigger>
     <SheetContent>

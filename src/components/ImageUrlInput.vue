@@ -37,7 +37,7 @@ const handleFileChange = async (event: Event) => {
   const file = files[0];
   try {
     isLoading.value = true;
-    const res = await api.uploadImage(file);
+    const res = await api.admin.uploadImage(file);
 
     const { success, imageUrl, message } = res.data;
     if (success) {

@@ -24,7 +24,7 @@ onMounted(async () => {
           <RouterLink :class="buttonVariants({ variant: 'link' })" to="/products">Products</RouterLink>
         </li>
         <li>
-          <RouterLink :class="buttonVariants({ variant: 'link' })" to="/console">Console</RouterLink>
+          <RouterLink :class="buttonVariants({ variant: 'link' })" to="/admin">Admin</RouterLink>
         </li>
       </ul>
     </nav>

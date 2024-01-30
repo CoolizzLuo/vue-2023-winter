@@ -14,14 +14,14 @@ import QUERY_KEY from '@/constant/queryKey';
 const queryClient = useQueryClient();
 const { isLoading, data } = useQuery({
   queryKey: [QUERY_KEY.PRODUCTS],
-  queryFn: api.getAllProducts,
+  queryFn: api.admin.getAllProducts,
   // initialData: [],
 });
 
 const products = computed(() => data.value ?? []);
 
 const { mutateAsync: deleteMutate } = useMutation({
-  mutationFn: api.deleteProduct,
+  mutationFn: api.admin.deleteProduct,
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: [QUERY_KEY.PRODUCTS] });
   },

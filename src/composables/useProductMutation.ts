@@ -9,7 +9,7 @@ const useProductMutation = (productId?: string) => {
 
   return useMutation({
     mutationFn: (payload: PostProduct) => {
-      return productId ? api.updateProduct(payload, productId) : api.createProduct(payload);
+      return productId ? api.admin.updateProduct(payload, productId) : api.admin.createProduct(payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.PRODUCTS] });
