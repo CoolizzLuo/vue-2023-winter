@@ -3,7 +3,6 @@ import { ref, watch, type PropType } from 'vue';
 import { PlusIcon } from 'lucide-vue-next';
 
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import ImageUrlInput from '@/components/ImageUrlInput.vue';
 
 const props = defineProps({
@@ -15,15 +14,11 @@ const props = defineProps({
 const emits = defineEmits(['update:imagesUrl']);
 
 const imagesUrlModel = ref([...props.imagesUrl]);
-const isLoading = ref(false);
 
 const handleAdd = () => imagesUrlModel.value.push('');
 const handleRemove = (index: number) => imagesUrlModel.value.splice(index, 1);
 
-watch(imagesUrlModel.value, (newUrls) => {
-  console.log(newUrls);
-  emits('update:imagesUrl', newUrls);
-});
+watch(imagesUrlModel.value, (newUrls) => emits('update:imagesUrl', newUrls));
 </script>
 
 <template>
@@ -38,15 +33,6 @@ watch(imagesUrlModel.value, (newUrls) => {
           :alt="'product-img-' + index"
         />
       </div>
-    </div>
-    <div v-if="isLoading" class="space-y-2 px-2">
-      <span>上傳中</span>
-      <div class="flex gap-2">
-        <Skeleton class="w-full h-10 bg-slate-200" />
-        <Skeleton class="w-10 h-10 bg-slate-200" />
-        <Skeleton class="w-10 h-10 bg-slate-200" />
-      </div>
-      <Skeleton class="w-64 h-48 bg-slate-200" />
     </div>
     <div class="self-center space-x-8">
       <Button type="button" variant="ghost" size="sm" @click="handleAdd">

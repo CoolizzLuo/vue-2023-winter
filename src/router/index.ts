@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useUserStore } from '@/stores/useUserStore';
 import Layout from '@/layouts/Layout.vue';
-import HomeView from '@/views/HomeView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
 
 const router = createRouter({
@@ -13,16 +12,6 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'home',
-          component: HomeView,
-        },
-        {
-          path: 'products',
-          name: 'products',
-          component: () => import('@/views/ProductsView.vue'),
-        },
-        {
-          path: 'console',
           name: 'console',
           component: () => import('@/views/ConsoleView'),
         },
