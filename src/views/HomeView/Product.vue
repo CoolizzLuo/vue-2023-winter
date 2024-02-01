@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 
 const props = defineProps<{
-  id: string;
   title: string;
   description: string;
   imagesUrl: string;
@@ -15,12 +14,12 @@ const props = defineProps<{
 </script>
 
 <template>
-  <Card class="max-w-72 flex-1">
+  <Card class="w-72">
     <CardHeader>
       <CardTitle>{{ props.title }}</CardTitle>
     </CardHeader>
     <CardContent class="space-y-4 py-0">
-      <img :src="props.imagesUrl" class="w-full h-auto max-h-[200px] object-cover rounded-md" />
+      <img :src="props.imagesUrl" class="w-full h-[200px] object-cover rounded-md" />
       <p>{{ props.description }}</p>
       <div class="space-x-2">
         <span class="text-gray-500 line-through" v-if="props.originalPrice"> ${{ props.originalPrice }} </span>

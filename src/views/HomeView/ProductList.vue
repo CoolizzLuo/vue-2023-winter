@@ -1,12 +1,24 @@
 <script setup lang="ts">
+import Loading from 'vue-loading-overlay';
+import { useQuery } from '@tanstack/vue-query';
 import { useToast } from '@/components/ui/toast/useToast';
 import Product from './Product.vue';
-
-const props = defineProps<{
-  data: any[];
-}>();
+import api from '@/api';
 
 const { toast } = useToast();
+
+const { data: products, isLoading } = useQuery({
+  queryKey: ['customer', 'products'],
+  queryFn: async () => {
+    try {
+      const res = await api.customer.products.getProducts();
+      console.log('res', res);
+      return res.data.products;
+    } catch (error) {
+      throw new Error('Error fetching products');
+    }
+  },
+});
 
 const handleAddToCart = (id: string) => {
   toast({
@@ -17,16 +29,18 @@ const handleAddToCart = (id: string) => {
 </script>
 
 <template>
-  <ul class="flex flex-wrap gap-4 items-center">
-    <li v-for="number in props.data" :key="number">
+  <div class="vl-parent" v-if="!products">
+    <Loading v-model:active="isLoading" :is-full-page="true" />
+  </div>
+  <ul class="flex flex-wrap gap-4 items-center" v-else>
+    <li class="flex-1 max-w-72" v-for="product in products" :key="product.id">
       <Product
-        id="1"
-        title="Product 1"
-        description="This is a product description"
-        imagesUrl="https://images.unsplash.com/photo-1704972841788-86fac20fc87e?q=80&w=3271&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        :originalPrice="100"
-        :salePrice="50"
-        @addToCart="() => handleAddToCart('1')"
+        :title="product.title"
+        :description="product.description"
+        :imagesUrl="product.imageUrl"
+        :originalPrice="product.origin_price"
+        :salePrice="product.price"
+        @addToCart="() => handleAddToCart(product.id)"
       />
     </li>
   </ul>
