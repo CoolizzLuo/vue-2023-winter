@@ -1,21 +1,8 @@
-import type { Pagination } from '@/types/products';
 import axiosInstance from '../axiosInstance';
+import type { Pagination } from '@/types/comm';
+import type { Product } from '@/types/customer';
 
 const PATH = import.meta.env.VITE_API_PATH;
-
-type Product = {
-  id: string;
-  title: string;
-  category: string;
-  content: string;
-  description: string;
-  imageUrl: string;
-  imagesUrl: string[];
-  is_enabled: number;
-  origin_price: number;
-  price: number;
-  unit: string;
-};
 
 // Product API
 const getProducts = async () => {
@@ -27,7 +14,7 @@ const getProducts = async () => {
   }>(`/api/${PATH}/products`);
 };
 
-const getProduct = async (id: string) => {
+const getProductById = async (id: string) => {
   return axiosInstance.get<{
     success: boolean;
     product: Product;
@@ -37,5 +24,5 @@ const getProduct = async (id: string) => {
 
 export default {
   getProducts,
-  getProduct,
+  getProductById,
 };

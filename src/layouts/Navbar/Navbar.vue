@@ -14,7 +14,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <header class="w-full flex justify-between items-center py-2">
+  <header class="w-full flex justify-between items-center py-4">
     <nav>
       <ul class="flex gap-4">
         <li>
