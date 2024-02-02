@@ -7,21 +7,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import api from '@/api';
+import QUERY_KEY from '@/constant/queryKey';
 
 const FEE = 100;
+
 const isOpen = ref(false);
 const { data } = useQuery({
-  queryKey: ['cart'],
-  queryFn: async () => {
-    try {
-      const res = await api.customer.cart.getCartDetail();
-
-      return res.data.data;
-    } catch (error) {
-      console.error(error);
-    }
-  },
-  staleTime: 1000 * 60 * 5,
+  queryKey: [QUERY_KEY.CARTS],
+  queryFn: async () => (await api.customer.cart.getCarts()).data.data,
 });
 
 const cartItemCount = computed(() => {
