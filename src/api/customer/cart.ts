@@ -41,7 +41,7 @@ const updateCart = async (product_id: string, qty: number) => {
   });
 };
 
-const deleteCart = async (product_id: number) => {
+const deleteCart = async (product_id: string) => {
   return axiosInstance.delete<{
     success: boolean;
     message: string;
