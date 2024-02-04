@@ -28,14 +28,14 @@ const postCart = async (product_id: string, qty: number) => {
   });
 };
 
-const updateCart = async (product_id: string, qty: number) => {
+const updateCart = async (cartId: string, productId: string, qty: number) => {
   return axiosInstance.put<{
     success: boolean;
     data: Cart;
     message: string;
-  }>(`/api/${PATH}/cart/${product_id}`, {
+  }>(`/api/${PATH}/cart/${cartId}`, {
     data: {
-      product_id,
+      product_id: productId,
       qty,
     },
   });

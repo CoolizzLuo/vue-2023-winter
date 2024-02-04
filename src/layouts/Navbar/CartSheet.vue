@@ -24,7 +24,8 @@ const cartItemCount = computed(() => {
 });
 
 const { mutate: updateCart } = useMutation({
-  mutationFn: ({ id, qty }: { id: string; qty: number }) => api.customer.cart.updateCart(id, qty),
+  mutationFn: ({ cartId, productId, qty }: { cartId: string; productId: string; qty: number }) =>
+    api.customer.cart.updateCart(cartId, productId, qty),
   onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] }),
 });
 
@@ -85,7 +86,7 @@ const { mutate: removeAllCarts } = useMutation({
                         size="icon"
                         class="h-8 w-8 shrink-0 rounded-full"
                         :disabled="isMutating || cart.qty <= 1"
-                        @click="() => updateCart({ id: cart.id, qty: cart.qty - 1 })"
+                        @click="() => updateCart({ cartId: cart.id, productId: cart.product_id, qty: cart.qty - 1 })"
                       >
                         <Minus class="h-4 w-4" />
                         <span class="sr-only">Decrease</span>
@@ -98,7 +99,7 @@ const { mutate: removeAllCarts } = useMutation({
                         size="icon"
                         class="h-8 w-8 shrink-0 rounded-full"
                         :disabled="isMutating"
-                        @click="() => updateCart({ id: cart.id, qty: cart.qty + 1 })"
+                        @click="() => updateCart({ cartId: cart.id, productId: cart.product_id, qty: cart.qty + 1 })"
                       >
                         <Plus class="h-4 w-4" />
                         <span class="sr-only">Increase</span>
