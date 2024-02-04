@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { ShoppingCart, Trash, Trash2, Minus, Plus } from 'lucide-vue-next';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useMutation, useQuery, useQueryClient, useIsMutating } from '@tanstack/vue-query';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -11,9 +11,9 @@ import QUERY_KEY from '@/constant/queryKey';
 import { cn } from '@/lib/utils';
 
 const queryClient = useQueryClient();
+const isMutating = useIsMutating();
 
 const isOpen = ref(false);
-const isLoading = ref(false);
 const { data } = useQuery({
   queryKey: [QUERY_KEY.CARTS],
   queryFn: async () => (await api.customer.cart.getCarts()).data.data,
@@ -25,22 +25,17 @@ const cartItemCount = computed(() => {
 
 const { mutate: updateCart } = useMutation({
   mutationFn: ({ id, qty }: { id: string; qty: number }) => api.customer.cart.updateCart(id, qty),
-  onMutate: () => (isLoading.value = true),
   onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] }),
-  onSettled: () => (isLoading.value = false),
 });
 
-const removeCartItemMutate = useMutation({
+const { mutate: removeCart } = useMutation({
   mutationFn: api.customer.cart.deleteCart,
-  onMutate: () => (isLoading.value = true),
   onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] }),
-  onSettled: () => (isLoading.value = false),
 });
 
-const removeAllCartMutate = useMutation({
+const { mutate: removeAllCarts } = useMutation({
   mutationFn: api.customer.cart.deleteAllCarts,
   onMutate: async () => {
-    isLoading.value = true;
     await queryClient.cancelQueries({ queryKey: [QUERY_KEY.CARTS] });
 
     const previousData = queryClient.getQueryData([QUERY_KEY.CARTS]);
@@ -54,10 +49,7 @@ const removeAllCartMutate = useMutation({
       queryClient.setQueryData([QUERY_KEY.CARTS], context.previousData);
     }
   },
-  onSettled: () => {
-    isLoading.value = false;
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] });
-  },
+  onSettled: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] }),
 });
 </script>
 
@@ -92,7 +84,7 @@ const removeAllCartMutate = useMutation({
                         variant="outline"
                         size="icon"
                         class="h-8 w-8 shrink-0 rounded-full"
-                        :disabled="isLoading || cart.qty <= 1"
+                        :disabled="isMutating || cart.qty <= 1"
                         @click="() => updateCart({ id: cart.id, qty: cart.qty - 1 })"
                       >
                         <Minus class="h-4 w-4" />
@@ -105,7 +97,7 @@ const removeAllCartMutate = useMutation({
                         variant="outline"
                         size="icon"
                         class="h-8 w-8 shrink-0 rounded-full"
-                        :disabled="isLoading"
+                        :disabled="isMutating"
                         @click="() => updateCart({ id: cart.id, qty: cart.qty + 1 })"
                       >
                         <Plus class="h-4 w-4" />
@@ -115,8 +107,8 @@ const removeAllCartMutate = useMutation({
                         variant="destructive"
                         size="icon"
                         class="h-6 w-6 ml-2 shrink-0 rounded-full"
-                        :disabled="isLoading"
-                        @click="() => removeCartItemMutate.mutate(cart.id)"
+                        :disabled="isMutating"
+                        @click="() => removeCart(cart.id)"
                       >
                         <Trash2 class="h-4 w-4" />
                       </Button>
@@ -136,20 +128,20 @@ const removeAllCartMutate = useMutation({
           </div>
         </div>
         <SheetFooter>
-          <Button class="w-full" type="button" :disabled="isLoading">
+          <Button class="w-full" type="button" :disabled="isMutating">
             <ShoppingCart class="h-4 w-4 mr-2" />
             訂單結帳
           </Button>
           <Button
             :class="
               cn('w-full', {
-                'opacity-50 cursor-not-allowed': isLoading || cartItemCount <= 0,
+                'opacity-50 cursor-not-allowed': isMutating || cartItemCount <= 0,
               })
             "
             type="button"
             variant="secondary"
-            :disabled="isLoading || cartItemCount <= 0"
-            @click="removeAllCartMutate.mutate"
+            :disabled="isMutating || cartItemCount <= 0"
+            @click="removeAllCarts"
           >
             <Trash class="h-4 w-4 mr-2" />
             清空購物車
