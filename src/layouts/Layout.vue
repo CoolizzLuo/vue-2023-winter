@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Navbar from '@/layouts/Navbar';
+import Navbar from '@/components/Navbar';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper.vue';
 import LoadingIndicator from '@/components/LoadingIndicator.vue';
 </script>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
+import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import api from '@/api';
 import QUERY_KEY from '@/constant/queryKey';
 import { cn } from '@/lib/utils';
@@ -133,20 +134,21 @@ const { mutate: removeAllCarts } = useMutation({
             <ShoppingCart class="h-4 w-4 mr-2" />
             訂單結帳
           </Button>
-          <Button
-            :class="
-              cn('w-full', {
-                'opacity-50 cursor-not-allowed': isMutating || cartItemCount <= 0,
-              })
-            "
-            type="button"
-            variant="secondary"
-            :disabled="isMutating || cartItemCount <= 0"
-            @click="removeAllCarts"
-          >
-            <Trash class="h-4 w-4 mr-2" />
-            清空購物車
-          </Button>
+          <ConfirmDialog :handle-confirm="removeAllCarts">
+            <Button
+              :class="
+                cn('w-full', {
+                  'opacity-50 cursor-not-allowed': isMutating || cartItemCount <= 0,
+                })
+              "
+              type="button"
+              variant="secondary"
+              :disabled="isMutating || cartItemCount <= 0"
+            >
+              <Trash class="h-4 w-4 mr-2" />
+              清空購物車
+            </Button>
+          </ConfirmDialog>
         </SheetFooter>
       </template>
       <div class="flex items-center justify-center h-72" v-else>
