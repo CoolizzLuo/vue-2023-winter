@@ -27,7 +27,7 @@ const logoutHandler = async () => {
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button variant="ghost" size="sm">
+      <Button variant="ghost" size="icon">
         <User class="h-5 w-5" />
       </Button>
     </DropdownMenuTrigger>

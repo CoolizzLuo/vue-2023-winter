@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useUserStore } from '@/stores/useUserStore';
 import Layout from '@/layouts/Layout.vue';
-import HomeView from '@/views/HomeView.vue';
+import HomeView from '@/views/HomeView';
 import NotFoundView from '@/views/NotFoundView.vue';
 
 const router = createRouter({

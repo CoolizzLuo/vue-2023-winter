@@ -24,7 +24,7 @@ const onRejected = (error: AxiosError<{ message: string }>) => {
     title: 'Something went wrong',
     variant: 'destructive',
     duration: 2000,
-    description: error?.response?.data?.message ?? error.message,
+    description: error?.response?.data?.message ?? error.message ?? 'Unknown error',
   });
 };
 

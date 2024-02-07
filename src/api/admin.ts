@@ -1,24 +1,20 @@
 import type { PostProduct } from '@/lib/validators/productValidator';
-import type { BaseResponse, Pagination, Product } from '@/types/products';
+import type { Pagination } from '@/types/comm';
+import type { BaseResponse, Product } from '@/types/products';
 import axiosInstance from './axiosInstance';
 
 const PATH = import.meta.env.VITE_API_PATH;
 
 // Product API
 const getAllProducts = async () => {
-  try {
-    const res = await axiosInstance.get<{
-      success: boolean;
-      products: Product[];
-      pagination: Pagination;
-      messages: string[];
-    }>(`/api/${PATH}/admin/products`);
+  const res = await axiosInstance.get<{
+    success: boolean;
+    products: Product[];
+    pagination: Pagination;
+    messages: string[];
+  }>(`/api/${PATH}/admin/products`);
 
-    return res.data.products;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+  return res.data.products;
 };
 
 const createProduct = (payload: PostProduct) =>

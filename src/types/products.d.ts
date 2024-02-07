@@ -30,11 +30,3 @@ export type PostProduct = {
   description?: string;
   is_enabled?: number;
 };
-
-export type Pagination = {
-  total_pages: number;
-  current_page: number;
-  has_pre: boolean;
-  has_next: boolean;
-  category: string;
-};
