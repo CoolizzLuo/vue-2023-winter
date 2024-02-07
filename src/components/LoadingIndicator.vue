@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useIsMutating } from '@tanstack/vue-query';
+
 import { Progress } from '@/components/ui/progress';
 import { usePlatformStore } from '@/stores/usePlatformStore';
-import { useIsMutating } from '@tanstack/vue-query';
 
 const { isLoading } = storeToRefs(usePlatformStore());
 
@@ -34,11 +35,7 @@ watch(isProgressing, () => {
 <template>
   <Teleport to="body">
     <Transition>
-      <Progress
-        v-show="isProgressing"
-        :model-value="progressValue"
-        class="h-1 rounded-b-none absolute inset-0 z-[99]"
-      />
+      <Progress v-show="isProgressing" :model-value="progressValue" class="h-1 rounded-b-none fixed inset-0 z-[99]" />
     </Transition>
   </Teleport>
 </template>

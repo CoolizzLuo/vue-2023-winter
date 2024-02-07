@@ -6,15 +6,16 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
+import OrderFormDialog from '@/components/Navbar/OrderFormDialog.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import api from '@/api';
 import QUERY_KEY from '@/constant/queryKey';
 import { cn } from '@/lib/utils';
 
+const isOpen = ref(false);
+
 const queryClient = useQueryClient();
 const isMutating = useIsMutating();
-
-const isOpen = ref(false);
 const { data } = useQuery({
   queryKey: [QUERY_KEY.CARTS],
   queryFn: async () => (await api.customer.cart.getCarts()).data.data,
@@ -67,13 +68,13 @@ const { mutate: removeAllCarts } = useMutation({
         </span>
       </Button>
     </SheetTrigger>
-    <SheetContent class="space-y-4">
+    <SheetContent class="space-y-4 h-full overflow-hidden">
       <SheetHeader>
         <SheetTitle class="text-center"> Shopping cart </SheetTitle>
       </SheetHeader>
       <template v-if="cartItemCount !== 0">
-        <ScrollArea class="px-3 max-h-[calc(100vh-240px)]">
-          <ul class="space-y-4 py-4">
+        <ScrollArea class="px-3">
+          <ul class="space-y-4 py-4 max-h-[calc(100vh-240px)]">
             <li v-for="cart in data?.carts" :key="cart.id" class="space-y-2">
               <div class="flex gap-4">
                 <img :src="cart.product.imageUrl" :alt="cart.product.title" class="w-20 h-16 rounded-md" />
@@ -130,10 +131,14 @@ const { mutate: removeAllCarts } = useMutation({
           </div>
         </div>
         <SheetFooter>
-          <Button class="w-full" type="button" :disabled="isMutating">
-            <ShoppingCart class="h-4 w-4 mr-2" />
-            訂單結帳
-          </Button>
+          <OrderFormDialog>
+            <template #trigger>
+              <Button class="w-full" type="button" :disabled="isMutating">
+                <ShoppingCart class="h-4 w-4 mr-2" />
+                訂單結帳
+              </Button>
+            </template>
+          </OrderFormDialog>
           <ConfirmDialog :handle-confirm="removeAllCarts">
             <Button
               :class="
