@@ -6,10 +6,12 @@ import UserMenu from './UserMenu.vue';
 import CartSheet from './CartSheet.vue';
 
 const userStore = useUserStore();
-const { mutateAsync: checkTokenMutate } = userStore.useCheckTokenMutation();
+const { mutate: checkTokenMutate } = userStore.useCheckTokenMutation();
 
-onMounted(async () => {
-  await checkTokenMutate();
+onMounted(() => {
+  if (userStore.token) {
+    checkTokenMutate();
+  }
 });
 </script>
 
@@ -23,7 +25,7 @@ onMounted(async () => {
         <li>
           <RouterLink :class="buttonVariants({ variant: 'link' })" to="/products">Products</RouterLink>
         </li>
-        <li>
+        <li v-if="userStore.token">
           <RouterLink :class="buttonVariants({ variant: 'link' })" to="/admin">Admin</RouterLink>
         </li>
       </ul>

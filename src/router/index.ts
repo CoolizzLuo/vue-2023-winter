@@ -1,8 +1,20 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, type NavigationGuard } from 'vue-router';
 import { useUserStore } from '@/stores/useUserStore';
 import Layout from '@/layouts/Layout.vue';
 import HomeView from '@/views/HomeView';
 import NotFoundView from '@/views/NotFoundView.vue';
+
+const authGuard: NavigationGuard = async (to, _, next) => {
+  const { token } = useUserStore();
+
+  if (to.name === 'login' && token) {
+    next({ name: 'home' });
+  } else if (to.name !== 'login' && !token) {
+    next({ name: 'login' });
+  } else {
+    next();
+  }
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +36,7 @@ const router = createRouter({
         {
           path: 'admin',
           name: 'admin',
+          beforeEnter: authGuard,
           component: () => import('@/views/AdminView'),
         },
         {
@@ -39,18 +52,6 @@ const router = createRouter({
       component: () => import('@/views/LoginView.vue'),
     },
   ],
-});
-
-router.beforeEach(async (to, _, next) => {
-  const { token } = useUserStore();
-
-  if (to.name === 'login' && token) {
-    next({ name: 'home' });
-  } else if (to.name !== 'login' && !token) {
-    next({ name: 'login' });
-  } else {
-    next();
-  }
 });
 
 export default router;
