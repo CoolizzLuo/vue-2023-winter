@@ -17,11 +17,9 @@ onMounted(() => {
 
 <template>
   <header class="w-full flex justify-between items-center py-4">
+    <RouterLink :class="buttonVariants({ variant: 'link' })" to="/">Logo</RouterLink>
     <nav>
       <ul class="flex gap-4">
-        <li>
-          <RouterLink :class="buttonVariants({ variant: 'link' })" to="/">Home</RouterLink>
-        </li>
         <li>
           <RouterLink :class="buttonVariants({ variant: 'link' })" to="/products">Products</RouterLink>
         </li>

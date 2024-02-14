@@ -1,15 +1,36 @@
 <script setup lang="ts">
-import type { Product } from '@/types/products';
+import { useRoute, useRouter } from 'vue-router';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Card, CardContent } from '@/components/ui/card';
+import { useQuery } from '@tanstack/vue-query';
+import api from '@/api';
 
-const { product } = defineProps<{
-  product: Product;
-}>();
+const route = useRoute();
+const router = useRouter();
+
+const { data: product } = useQuery({
+  queryKey: ['product', route.params.id],
+  queryFn: async () => {
+    const { id } = route.params as { id: string };
+    if (id) {
+      try {
+        const res = await api.customer.products.getProductById(id);
+
+        if (res.data.success) {
+          return res.data.product;
+        }
+        throw new Error('Product not found');
+      } catch (error) {
+        router.push('/');
+      }
+    }
+  },
+  enabled: !!route.params.id,
+});
 </script>
 
 <template>
-  <section>
+  <section v-if="product">
     <div class="flex gap-4">
       <img :src="product.imageUrl" class="w-1/2" alt="product" />
       <div class="w-1/2">

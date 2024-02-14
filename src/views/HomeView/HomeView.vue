@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import Loading from 'vue-loading-overlay';
 import { useQueryClient, useQuery, useMutation } from '@tanstack/vue-query';
 import { useToast } from '@/components/ui/toast/useToast';
 import ProductItem from './ProductItem.vue';
-import ProductDetail from './ProductDetail.vue';
 import api from '@/api';
 import QUERY_KEY from '@/constant/queryKey';
 
@@ -38,17 +36,6 @@ const { mutate: addCartMutate } = useMutation({
     toast({ title: title + ' 已加入購物車' });
   },
 });
-
-const selectedProductId = ref<string | null>(null);
-
-const selectedProduct = computed(() => {
-  if (!selectedProductId.value) {
-    return null;
-  }
-  return products.value?.find(({ id }) => id === selectedProductId.value);
-});
-
-const selectHandler = (id: string) => (selectedProductId.value = id);
 </script>
 
 <template>
@@ -56,8 +43,9 @@ const selectHandler = (id: string) => (selectedProductId.value = id);
     <Loading v-model:active="isLoading" :is-full-page="true" />
   </div>
   <ul class="flex flex-wrap gap-4 items-center" v-else>
-    <li class="flex-1 max-w-72" v-for="product in products" :key="product.id" @click="() => selectHandler(product.id)">
+    <li class="flex-1 max-w-72" v-for="product in products" :key="product.id">
       <ProductItem
+        :id="product.id"
         :title="product.title"
         :description="product.description"
         :imagesUrl="product.imageUrl"
@@ -67,5 +55,4 @@ const selectHandler = (id: string) => (selectedProductId.value = id);
       />
     </li>
   </ul>
-  <ProductDetail v-if="selectedProduct" :product="selectedProduct" />
 </template>
