@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 
 const props = defineProps<{
+  id: string;
   title: string;
   description: string;
   imagesUrl: string;
   originalPrice?: number;
   salePrice: number;
+  onSelected: () => void;
   onAddToCart: () => void;
 }>();
 </script>
@@ -26,8 +28,9 @@ const props = defineProps<{
         <span class="text-red-500">${{ props.salePrice }}</span>
       </div>
     </CardContent>
-    <CardFooter class="py-4">
-      <Button class="w-full" @click="onAddToCart">
+    <CardFooter class="py-4 flex justify-between items-center gap-4">
+      <Button variant="outline" class="flex-1" @click="onSelected">查看更多</Button>
+      <Button class="flex-1" @click="onAddToCart">
         <ShoppingCart class="h-5 w-5" />
       </Button>
     </CardFooter>

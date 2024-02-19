@@ -20,10 +20,7 @@ const isLoading = ref(false);
 const handleAdd = () => imagesUrlModel.value.push('');
 const handleRemove = (index: number) => imagesUrlModel.value.splice(index, 1);
 
-watch(imagesUrlModel.value, (newUrls) => {
-  console.log(newUrls);
-  emits('update:imagesUrl', newUrls);
-});
+watch(imagesUrlModel.value, (newUrls) => emits('update:imagesUrl', newUrls));
 </script>
 
 <template>

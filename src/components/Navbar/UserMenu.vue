@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { LogOut, User } from 'lucide-vue-next';
-
+import { computed } from 'vue';
+import { LogIn, LogOut, User } from 'lucide-vue-next';
 import router from '@/router';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,13 +15,15 @@ import {
 import { useUserStore } from '@/stores/useUserStore';
 
 const userStore = useUserStore();
-const { mutateAsync: logoutMutate } = userStore.useLogoutMutation();
+const { mutate: logoutMutate } = userStore.useLogoutMutation();
 
-const logoutHandler = async () => {
-  await logoutMutate();
-
-  router.push('/login');
-};
+const userName = computed(() => {
+  if (userStore.user) {
+    return userStore.user.email;
+  } else {
+    return 'Guest';
+  }
+});
 </script>
 
 <template>
@@ -32,9 +34,13 @@ const logoutHandler = async () => {
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56">
-      <DropdownMenuLabel>{{ userStore.user?.email }}</DropdownMenuLabel>
+      <DropdownMenuLabel>{{ userName }}</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem class="cursor-pointer" @click="logoutHandler">
+      <DropdownMenuItem v-if="!userStore.token" class="cursor-pointer" @click="() => router.push('/login')">
+        <LogIn class="mr-2 h-4 w-4" />
+        <span>Log In</span>
+      </DropdownMenuItem>
+      <DropdownMenuItem v-else class="cursor-pointer" @click="logoutMutate">
         <LogOut class="mr-2 h-4 w-4" />
         <span>Log out</span>
         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
