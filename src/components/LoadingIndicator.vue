@@ -9,7 +9,7 @@ import { usePlatformStore } from '@/stores/usePlatformStore';
 const { isLoading } = storeToRefs(usePlatformStore());
 
 const progressValue = ref(0);
-const interval = ref<number>();
+const interval = ref();
 
 const isMutating = useIsMutating();
 
