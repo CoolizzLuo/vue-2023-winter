@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import { ShoppingCart } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -11,10 +10,9 @@ const props = defineProps<{
   imagesUrl: string;
   originalPrice?: number;
   salePrice: number;
+  onSelected: () => void;
   onAddToCart: () => void;
 }>();
-
-const router = useRouter();
 </script>
 
 <template>
@@ -31,7 +29,7 @@ const router = useRouter();
       </div>
     </CardContent>
     <CardFooter class="py-4 flex justify-between items-center gap-4">
-      <Button variant="outline" class="flex-1" @click="() => router.push('/product/' + props.id)">查看更多</Button>
+      <Button variant="outline" class="flex-1" @click="onSelected">查看更多</Button>
       <Button class="flex-1" @click="onAddToCart">
         <ShoppingCart class="h-5 w-5" />
       </Button>

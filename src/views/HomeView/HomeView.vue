@@ -1,41 +1,31 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import Loading from 'vue-loading-overlay';
-import { useQueryClient, useQuery, useMutation } from '@tanstack/vue-query';
-import { useToast } from '@/components/ui/toast/useToast';
+import { useQuery } from '@tanstack/vue-query';
 import ProductItem from './ProductItem.vue';
 import api from '@/api';
 import QUERY_KEY from '@/constant/queryKey';
+import ProductDetailDialog from './ProductDetailDialog.vue';
+import useProductQuery from '@/composables/useProductQuery';
+import useCart from '@/composables/useCart';
 
-const queryClient = useQueryClient();
-const { toast } = useToast();
+const isOpenDetailDialog = ref(false);
+const selectedProductId = ref<string | null>(null);
 
 const { data: products, isLoading } = useQuery({
   queryKey: [QUERY_KEY.CUSTOMER_PRODUCTS],
   queryFn: async () => (await api.customer.products.getProducts()).data.products,
 });
 
-const { mutate: addCartMutate } = useMutation({
-  mutationFn: async (id: string) => await api.customer.cart.postCart(id, 1),
-  onMutate: () => {
-    queryClient.cancelQueries({
-      queryKey: [QUERY_KEY.CARTS],
-    });
+const { data: selectedProduct, isLoading: isProductDetailLoading } = useProductQuery(selectedProductId);
 
-    const previousCarts = queryClient.getQueryData([QUERY_KEY.CARTS]);
-    return { previousCarts };
-  },
-  onError: (_, __, context: any) => {
-    queryClient.setQueryData([QUERY_KEY.CARTS], context.previousCarts);
-  },
-  onSettled: () => {
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] });
-  },
-  onSuccess: (res) => {
-    const title = res.data.data.product.title;
+const { addCartMutation } = useCart();
+const { mutate: addCartMutate } = addCartMutation;
 
-    toast({ title: title + ' 已加入購物車' });
-  },
-});
+const handleSelected = (id: string) => {
+  selectedProductId.value = id;
+  isOpenDetailDialog.value = true;
+};
 </script>
 
 <template>
@@ -51,8 +41,14 @@ const { mutate: addCartMutate } = useMutation({
         :imagesUrl="product.imageUrl"
         :originalPrice="product.origin_price"
         :salePrice="product.price"
-        @addToCart="() => addCartMutate(product.id)"
+        @selected="() => handleSelected(product.id)"
+        @addToCart="() => addCartMutate({ id: product.id, count: 1 })"
       />
     </li>
   </ul>
+  <ProductDetailDialog
+    v-model:isOpen="isOpenDetailDialog"
+    :isLoading="isProductDetailLoading"
+    :product="selectedProduct"
+  />
 </template>

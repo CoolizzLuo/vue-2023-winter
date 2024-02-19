@@ -1,58 +1,24 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { ShoppingCart, Trash, Trash2, Minus, Plus } from 'lucide-vue-next';
-import { useMutation, useQuery, useQueryClient, useIsMutating } from '@tanstack/vue-query';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import OrderFormDialog from '@/components/Navbar/OrderFormDialog.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
-import api from '@/api';
-import QUERY_KEY from '@/constant/queryKey';
 import { cn } from '@/lib/utils';
+import useCart from '@/composables/useCart';
 
 const isOpen = ref(false);
 
-const queryClient = useQueryClient();
-const isMutating = useIsMutating();
-const { data } = useQuery({
-  queryKey: [QUERY_KEY.CARTS],
-  queryFn: async () => (await api.customer.cart.getCarts()).data.data,
-});
+const { data, isMutating, updateCartMutation, removeCartMutation, removeAllCartsMutation } = useCart();
+const { mutate: updateCart } = updateCartMutation;
+const { mutate: removeCart } = removeCartMutation;
+const { mutate: removeAllCarts } = removeAllCartsMutation;
 
 const cartItemCount = computed(() => {
   return data.value?.carts.length ?? 0;
-});
-
-const { mutate: updateCart } = useMutation({
-  mutationFn: ({ cartId, productId, qty }: { cartId: string; productId: string; qty: number }) =>
-    api.customer.cart.updateCart(cartId, productId, qty),
-  onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] }),
-});
-
-const { mutate: removeCart } = useMutation({
-  mutationFn: api.customer.cart.deleteCart,
-  onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] }),
-});
-
-const { mutate: removeAllCarts } = useMutation({
-  mutationFn: api.customer.cart.deleteAllCarts,
-  onMutate: async () => {
-    await queryClient.cancelQueries({ queryKey: [QUERY_KEY.CARTS] });
-
-    const previousData = queryClient.getQueryData([QUERY_KEY.CARTS]);
-
-    queryClient.setQueryData([QUERY_KEY.CARTS], { carts: [] });
-
-    return { previousData };
-  },
-  onError: (err, _, context) => {
-    if (context?.previousData) {
-      queryClient.setQueryData([QUERY_KEY.CARTS], context.previousData);
-    }
-  },
-  onSettled: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CARTS] }),
 });
 </script>
 

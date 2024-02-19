@@ -21,7 +21,7 @@ const onSubmit = handleSubmit(async (values) => {
   });
 
   if (res.status === 200 && res.data.token) {
-    router.push('/');
+    router.push('/admin');
   }
 });
 </script>
