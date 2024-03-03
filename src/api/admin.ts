@@ -6,15 +6,17 @@ import axiosInstance from './axiosInstance';
 const PATH = import.meta.env.VITE_API_PATH;
 
 // Product API
-const getAllProducts = async () => {
+const getAllProducts = async ({ page, category = '' }: { page?: number; category?: string }) => {
+  const queryString = new URLSearchParams({ page: String(page), category });
+
   const res = await axiosInstance.get<{
     success: boolean;
     products: Product[];
     pagination: Pagination;
     messages: string[];
-  }>(`/api/${PATH}/admin/products`);
+  }>(`/api/${PATH}/admin/products?${queryString}`);
 
-  return res.data.products;
+  return res.data;
 };
 
 const createProduct = (payload: PostProduct) =>

@@ -9,7 +9,7 @@ const authGuard: NavigationGuard = async (to, _, next) => {
   const { token } = useUserStore();
 
   if (to.name === 'login' && token) {
-    next({ name: 'admin' });
+    next({ name: 'admin-products' });
   } else if (to.name !== 'login' && !token) {
     next({ name: 'login' });
   } else {
@@ -43,8 +43,8 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'admin',
-          component: () => import('@/views/AdminView'),
+          name: 'admin-product-list',
+          component: () => import('@/views/admin/ProductListView'),
         },
       ],
     },
